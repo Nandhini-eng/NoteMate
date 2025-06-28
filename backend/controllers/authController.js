@@ -31,6 +31,7 @@ exports.signup = async (req, res) => {
       id: user._id,
       name: user.name,
       email: user.email,
+      profileImage: user.profileImage,
     };
 
     res.status(201).json({
@@ -63,6 +64,7 @@ exports.login = async (req, res) => {
       id: user._id,
       name: user.name,
       email: user.email,
+      profileImage: user.profileImage,
     };
 
     res.json({
@@ -101,6 +103,7 @@ exports.verify = async (req, res) => {
       id: user._id,
       name: user.name,
       email: user.email,
+      profileImage: user.profileImage,
     };
 
     res.json({ user: userResponse });
@@ -122,5 +125,35 @@ exports.logout = async (req, res) => {
   } catch (error) {
     console.error("Logout error:", error);
     res.status(500).json({ message: "Logout failed" });
+  }
+};
+
+// Update profile endpoint
+exports.updateProfile = async (req, res) => {
+  try {
+    const { profileImage } = req.body;
+    const userId = req.user.id;
+
+    const user = await User.findByIdAndUpdate(
+      userId,
+      { profileImage },
+      { new: true }
+    ).select("-password");
+
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    const userResponse = {
+      id: user._id,
+      name: user.name,
+      email: user.email,
+      profileImage: user.profileImage,
+    };
+
+    res.json({ user: userResponse });
+  } catch (error) {
+    console.error("Update profile error:", error);
+    res.status(500).json({ message: "Failed to update profile" });
   }
 };

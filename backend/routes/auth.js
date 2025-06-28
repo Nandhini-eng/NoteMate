@@ -6,6 +6,7 @@ const {
   getMe,
   verify,
   logout,
+  updateProfile,
 } = require("../controllers/authController");
 const authMiddleware = require("../middleware/authMiddleware");
 
@@ -14,5 +15,6 @@ router.post("/login", login);
 router.get("/me", authMiddleware, getMe);
 router.get("/verify", authMiddleware, verify);
 router.post("/logout", authMiddleware, logout);
+router.put("/profile", authMiddleware, updateProfile);
 
 module.exports = router;
