@@ -50,7 +50,13 @@ exports.getNotes = async (req, res) => {
       .sort({ createdAt: -1 });
     const total = await Note.countDocuments({ userId: req.user.id });
 
-    res.json({ data: notes, page, totalPages: Math.ceil(total / limit) });
+    res.json({
+      data: notes,
+      page,
+      totalPages: Math.ceil(total / limit),
+      total,
+      limit,
+    });
   } catch (error) {
     res.status(500).json({ error: "Failed to fetch notes" });
   }
