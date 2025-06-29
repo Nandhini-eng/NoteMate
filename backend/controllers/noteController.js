@@ -64,9 +64,17 @@ exports.getNotes = async (req, res) => {
 
 exports.updateNote = async (req, res) => {
   try {
+    const updateData = { ...req.body };
+
+    // If imageURL is explicitly set to null, remove it from the database
+    if (updateData.imageURL === null) {
+      updateData.$unset = { imageURL: 1 };
+      delete updateData.imageURL;
+    }
+
     const updated = await Note.findOneAndUpdate(
       { _id: req.params.id, userId: req.user.id },
-      req.body,
+      updateData,
       { new: true }
     );
     if (!updated) return res.status(404).json({ error: "Note not found" });
